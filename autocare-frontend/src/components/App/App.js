@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
 import './App.css';
-import { Route, Link } from "react-router-dom";
+import { Route, Link, Switch } from "react-router-dom";
 import axios from 'axios';
 
 import Navigation from '../NavBar/Navigation';
-import Vehicle from '../Vehicle/Vehicle';
+import Vehicles from '../Vehicle/Vehicles';
+import ServiceLog from '../Servicelog/ServiceLog'
 
 const backendUrl = "http://localhost:8000/api/vehicle/?format=json";
 
 class App extends Component {
   constructor(props) {
-    super()
+    super(props)
 
     this.state = {
       vehicles: []
@@ -24,15 +25,9 @@ class App extends Component {
   render() {
     console.log(this.state)
 
-    let allVehicles = this.state.vehicles.map(vehicle => {
-      return <Vehicle key={vehicle.id} vehicle={vehicle}/>
-    })
-
-    // return (
-    //   <div>
-    //   I am in the React app...
-    //   {allVehicles}
-    //   </div>
+    // let allVehicles = this.state.vehicles.map(vehicle => {
+    //   return <Vehicle key={vehicle.id} vehicle={vehicle}/>
+    // })
     
     return (
       <div className="App">
@@ -40,11 +35,25 @@ class App extends Component {
           <Link to="/">
             <h1 className='App-logo'>AutoCare </h1>
           </Link>
+          <Route exact path="/"  component={ Navigation }/>
       </header>
       <section className='Main-display'>
-          <Route exact path="/"  component={ Navigation }/>
           I am in the React app...
-          {allVehicles}
+          <Switch>
+            <Route
+              exact path='/' 
+              render={routerProps => (
+                <Vehicles vehicles={this.state.vehicles} {...routerProps}
+                />
+              )}
+            />
+            <Route
+              exact path='/vehicle/:id'
+              render={routerProps => <ServiceLog {...routerProps} vehicles={this.state.vehicles} 
+              />
+             }
+            />
+          </Switch>
       </section>
       </div>
     )
