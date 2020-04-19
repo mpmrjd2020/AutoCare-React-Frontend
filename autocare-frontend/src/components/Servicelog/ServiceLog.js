@@ -20,7 +20,7 @@ const ServiceLog = props => {
         <div className='app-data-row'><p className='app-labels'>Vehicle color: </p><p> {ServiceEntries[0].color}</p></div>
         <div className='app-data-row'><p className='app-labels'>Vehicle mileage: </p><p> {ServiceEntries[0].current_mileage}</p></div>
         <div className='app-data-row'><p className='app-labels'><img src={ServiceEntries[0].vehicle_image} alt='Automobile image' className='auto-image'></img></p></div>
-        <Link to={`/update-vehicle/${ServiceEntries.id}/`} className='app-link'>
+        <Link to={`/vehicle/${ServiceEntries[0].id}/update-vehicle/`} className='app-link'>
         Update Vehile Entry
         </Link>
         {/* <Link to={`/delete-vehicle/${ServiceEntries.id}/`} className='app-link'>
@@ -32,7 +32,7 @@ const ServiceLog = props => {
         onClick={props.handleVDelete}>
         Delete Vehicle Entry
         </button>
-        <Link to={`/add-service/${ServiceEntries.id}/`} className='app-link'>
+        <Link to={`/add-service/${ServiceEntries[0].id}/`} className='app-link'>
         Add Service Entry
         </Link>
 

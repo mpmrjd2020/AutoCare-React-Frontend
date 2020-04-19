@@ -7,6 +7,8 @@ import Navigation from '../NavBar/Navigation';
 import Vehicles from '../Vehicle/Vehicles';
 import ServiceLog from '../Servicelog/ServiceLog';
 import NewVehicleForm from '../Vehicle/NewVehicleForm';
+import UpdateVehicleForm from '../Vehicle/UpdateVehicleForm';
+
 
 const backendUrl = "http://localhost:8000/api/vehicle/";
 
@@ -14,7 +16,27 @@ class App extends Component {
   constructor(props) {
     super(props)
 
+    this.emptyService = {
+      id: null,
+      serviceType: "",
+      serviceMileage: "",
+      serviceDt: "",
+      serviceBy: "",
+      serviceReceipt: ""
+    }
+
     this.state = {
+    // Update Vehicle Creation
+      updateVehicle: {
+        upVehicleMake: "",
+        upVehicleModel: "",
+        upVehicleYear: "",
+        upVehicleColor: "",
+        upVehicleCurrentMileage: "",
+        upVehicleImage: "",
+        upVehicleServices: [Object.assign({}, this.emptyService)]
+      },
+    // New Vehicle creation
       vehicles: [],
       services: [],
     // Vehicles form variables
@@ -45,26 +67,34 @@ class App extends Component {
 
   createVehicleAxios = event => {
     console.log('create item axios')
+ 
     axios({
       method: "POST",
-      url: `${backendUrl}`,
-        data: {make: "Alpha Romeo",
-              model: "Giulia",
-              year: "2018",
-              color: "Metallic Brown",
-              current_mileage: "6,500",
-              vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzylG5XxfgZntgmho_47a1qocPb0ztcvTb-hbV_qC11lV3-IXX&usqp=CAU",
-              services: []
-            }
-      // data: {
-      //     make: this.state.vehicleMake,
-      //     model: this.state.vehicleModel,
-      //     year: this.state.vehicleYear,
-      //     color: this.state.vehicleColor,
-      //     currentMileage: this.state.vehicleCurrentMileage,
-      //     vehicleImage: this.state.vehicleImage,
-      //     services: this.state.services
-      // }
+      // url: `${backendUrl}`,
+      //   data: {make: "Alpha Romeo",
+      //         model: "Giulia",
+      //         year: "2017",
+      //         color: "Metallic Green",
+      //         current_mileage: "16,500",
+      //         vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzylG5XxfgZntgmho_47a1qocPb0ztcvTb-hbV_qC11lV3-IXX&usqp=CAU",
+      //         services: []
+      //         }
+      data: {
+          make: this.state.vehicleMake,
+          model: this.state.vehicleModel,
+          year: this.state.vehicleYear,
+          color: this.state.vehicleColor,
+          currentMileage: this.state.vehicleCurrentMileage,
+          vehicleImage: this.state.vehicleImage,
+          services: [ {
+            serviceType: this.state.serviceType,
+            serviceMileage: this.state.serviceMileage,
+            serviceDt: this.state.serviceDt,
+            serviceBy: this.state.serviceBy,
+            serviceReceipt: this.state.serviceReceipt 
+          }
+          ]
+      }
       // data: {
     //     data: {make: "Hyndaiz",
     //           model: "Accent",
@@ -88,7 +118,59 @@ class App extends Component {
       }));
     }).then((response) => {
       console.log("Car Maintain App","response get details:"+response.data);
-    }).catch(err => console.log(err))
+      console.log('data',response.data);
+      console.log('status',response.status);
+      console.log('statustext',response.statusText);
+      console.log('headers',response.headers);
+      console.log('config',response.config);
+    }).catch(err => 
+      console.log(err)
+    )
+  }
+
+  handleUpdateVehicleSubmit = event => {
+    axios({
+      method: "PUT",
+      data: {
+          make: this.state.vehicleMake,
+          model: this.state.vehicleModel,
+          year: this.state.vehicleYear,
+          color: this.state.vehicleColor,
+          currentMileage: this.state.vehicleCurrentMileage,
+          vehicleImage: this.state.vehicleImage,
+          services: this.state.services
+      }
+      // data: {
+    //     data: {make: "Hyndaiz",
+    //           model: "Accent",
+    //           year: "2011",
+    //           color: "Metallic Brown",
+    //           current_mileage: "73,120",
+    //           vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS0_b5f6nvSZ2MkxgAKgbKpS5tAK0gF0VAv_EaRSmU4XGqdwxy9&usqp=CAU",
+    //           services: [{
+    //             service_type: "Maintenance",
+    //             service_mileage: "93,000",
+    //             service_dt: "12/21/2017",
+    //             service_by: "Midas",
+    //             service_receipt: null
+    //             }]
+    //           }
+    // // }
+    }).then(newVehicle => {
+      this.props.history.push('/');
+      this.setState(prevState => ({
+        events: [...prevState.vehicles, newVehicle.data]
+      }));
+    }).then((response) => {
+      console.log("Car Maintain App","response get details:"+response.data);
+      console.log('data',response.data);
+      console.log('status',response.status);
+      console.log('statustext',response.statusText);
+      console.log('headers',response.headers);
+      console.log('config',response.config);
+    }).catch(err => 
+      console.log(err)
+    )
   }
 
   deleteVehicleAxios = event => {
@@ -174,29 +256,36 @@ handNewVehicleSubmit = event => {
             />
             <Route
               exact path='/vehicle/:id'
-              render={routerProps => <ServiceLog {...routerProps} vehicles={this.state.vehicles} 
+              render={routerProps => <ServiceLog 
+              {...routerProps} 
+              vehicles={this.state.vehicles} 
+              updateVehicle={this.state.update}
               handleVDelete={this.deleteVehicleAxios}
+              handleChange={this.handleChange}
+              handleUpdateSubmit={this.handleUpdateVehicleSubmit }
               />
              }
             />
             <Route
               exact path='/new-vehicle/'
-              render={() => (              
-                <NewVehicleForm
+              render={() => (<NewVehicleForm
                   handleChange={this.handleChange}
                   handleSubmit={this.handNewVehicleSubmit }
                 />
               )}
             />
-            {/* <Route
-              exact path='/update-vehicle/'
-              render={() => (              
-                <UpdateVehicleForm
+            <Route
+              exact path='/vehicle/:id/update-vehicle/'
+              render={routerProps => (<UpdateVehicleForm 
+                  {...routerProps} 
+                  vehicles={this.state.vehicles} 
+                  updateVehicle={this.state.update}
                   handleChange={this.handleChange}
                   handleSubmit={this.handNewVehicleSubmit }
+                  handleUpdateSubmit={this.handleUpdateVehicleSubmit }
                 />
               )}
-            /> */}
+            />
     
             <Route path='/*' render={() => <Redirect to='/' />} />
           </Switch>
