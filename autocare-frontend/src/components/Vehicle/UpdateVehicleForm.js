@@ -63,16 +63,60 @@ class UpdateVehicle extends Component {
 
         </div>
 
+        <div>
+            {ServiceEntries[0].services.map((service, i) => {
+                return (
+                <div key={i}>
+
+                    <label>
+                        Service Record {service.id}
+                    </label>
+
+                    <button
+                        className='delete-s-button app-link'
+                        onClick={e => this.handleDeleteService()}>
+                        - Delete Service Entry
+                    </button>
+
+                    <p className='app-form'>
+                        <label className='Add-Vehicle-Label'>Service Type</label>
+                        <input type='text' name='serviceType:' placeholder='SType' value={service.service_type} />
+                    </p>
+
+                    <p className='app-form'>
+                        <label className='Add-Vehicle-Label'>Service Mileage:</label>
+                        <input type='number' name='serviceMileage' placeholder='SMileage' value={service.service_mileage}/>
+                    </p>
+
+                    <p className='app-form'>
+                        <label className='Add-Vehicle-Label'>Service Date:</label>
+                        <input type='text' name='serviceDt' placeholder='SDate' value={service.service_dt}/>
+                    </p>
+
+                    <p className='app-form'>
+                        <label className='Add-Vehicle-Label'>Service By:</label>
+                        <input type='text' name='serviceBy' placeholder='SBy' value={service.service_mileage}/>
+                    </p>       
+
+                    <p className='app-form'>
+                        <label className='Add-Vehicle-Label'>Service Receipt</label>
+                        <input type='text' name='serviceReceipt' placeholder='SReceipt' value={service.service_receipt}/>
+                    </p>
+                </div>
+                )
+            })}
+        </div>
+
         <div className='Service-Section-Create'>
             <div className="tasks-fieldset">
-            <h5>Service Record</h5>
-            {this.updateServiceForm()}
-            <button
-                className='add-s-button app-link'
-                onClick={e => this.handleCreateService()}>
-                + Create Service Entry
-            </button>
-            </div>
+                <h5>Service Record</h5>
+                {this.updateServiceForm()}
+                <button
+                    className='add-s-button app-link'
+                    onClick={e => this.handleCreateService()}>
+                    + Create Service Entry
+                </button>
+        </div>
 
         </div>
         <p className='app-form'>
@@ -80,6 +124,7 @@ class UpdateVehicle extends Component {
             type='submit'
             className='update-existing-form-button'
             value='Update Vehicle'
+            className='app-link'
         />
         </p>
         </form>
