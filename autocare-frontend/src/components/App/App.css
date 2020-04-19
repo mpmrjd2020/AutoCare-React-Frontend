@@ -1,25 +1,41 @@
 .App {
+  display: flex;
   text-align: center;
+  background-color: rgb(255, 255, 254);
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 2vmin;
-  pointer-events: none;
+.logo {
+  /* height: 2vmin;
+  pointer-events: none; */
+  text-decoration: none;
+  margin: 10px;
 }
+ 
 
 .App-header {
-  background-color: #282c34;
-  min-height: 5vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  text-decoration: none;
+  background-image: linear-gradient(rgb(119, 137, 172), rgb(209, 209, 151));
+  height: 12vh;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: space-between;
   font-size: calc(5px + 2vmin);
   color: white;
+  border-bottom: 2px solid black;;
 }
 
-.App-link {
-  color: #61dafb;
+.app-link {
+  border: 1px solid rgb(83, 49, 187);
+  color: rgb(83, 49, 187);
+  background-color: rgba(90, 117, 173, 0.494);;
+  border-radius: 5px;
+  text-decoration: none;
+  margin: 10px;
+  padding: 5px
 }
 
 .Vehicle-display {
@@ -30,10 +46,63 @@
 .Vehicle-info {
   border-style: outset;
   margin: 5px;
-  background-color: lightgrey;
+  padding-bottom: 25px;
+  background-color: rgba(107, 153, 244, 0.161);
 }
 
 .Service-record {
   border-style: outset;
-  margin: 5px
+  margin: 5px;
+  padding-bottom: 25px;
+}
+
+.app-labels {
+  font-weight: 700;
+}
+
+.Add-Vehicle-Label {
+  font-weight: 700;
+}
+
+/* .New-Vehicle-Entry {
+  display: flex;
+  text-align: center;
+} */
+
+.app-data-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 0;
+  margin: 5px;
+}
+
+.app-data-row > p {
+  padding: 2px;
+  margin: 0px;
+}
+
+.app-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.new-v-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.create-new-form-button {
+  border: 1px solid rgb(83, 49, 187);
+  color: rgb(83, 49, 187);
+  background-color: rgba(90, 117, 173, 0.494);;
+  border-radius: 5px;
+  padding: 10px
+}
+
+.auto-image {
+  width: 120px;
+  height: 80px;
+  margin-bottom: 10px;
 }

@@ -16,6 +16,7 @@ class App extends Component {
 
     this.state = {
       vehicles: [],
+      services: [],
     // Vehicles form variables
       vehicleMake: "",
       vehicleModel: "",
@@ -23,36 +24,117 @@ class App extends Component {
       vehicleColor: "",
       vehicleCurrentMileage: "",
       vehicleImage: "", 
+    // Services form variables
+      serviceType: "",
+      serviceMileage: "",
+      serviceDt: "",
+      serviceBy: "",
+      serviceReceipt: "", 
+
     }
   }
   componentDidMount() {
-    axios({method: 'GET', url: backendUrl})
-      .then(vehicles => this.setState({vehicles: vehicles.data}))
+    this.getVehiclesAxios() 
   }
 
-  createItemAxios = event => {
+  getVehiclesAxios() {
+    console.log('delete redirections', backendUrl)
+    axios({method: 'GET', url: backendUrl})
+    .then(vehicles => this.setState({vehicles: vehicles.data}))
+  }
+
+  createVehicleAxios = event => {
     console.log('create item axios')
     axios({
       method: "POST",
       url: `${backendUrl}`,
-      data: {
-        vehicle: {
-          make: this.state.vehicleMake,
-          model: this.state.vehicleModel,
-          year: this.state.vehicleYear,
-          color: this.state.vehicleColor,
-          currentMileage: this.state.vehicleCurrentMileage,
-          vehicleImage: this.state.vehicleImage
-
-        }
-      }
-    }).then(newEvent => {
-      this.props.history.push(`/event/${newEvent.data._id}`);
+        data: {make: "Alpha Romeo",
+              model: "Giulia",
+              year: "2018",
+              color: "Metallic Brown",
+              current_mileage: "6,500",
+              vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTzylG5XxfgZntgmho_47a1qocPb0ztcvTb-hbV_qC11lV3-IXX&usqp=CAU",
+              services: []
+            }
+      // data: {
+      //     make: this.state.vehicleMake,
+      //     model: this.state.vehicleModel,
+      //     year: this.state.vehicleYear,
+      //     color: this.state.vehicleColor,
+      //     currentMileage: this.state.vehicleCurrentMileage,
+      //     vehicleImage: this.state.vehicleImage,
+      //     services: this.state.services
+      // }
+      // data: {
+    //     data: {make: "Hyndaiz",
+    //           model: "Accent",
+    //           year: "2011",
+    //           color: "Metallic Brown",
+    //           current_mileage: "73,120",
+    //           vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS0_b5f6nvSZ2MkxgAKgbKpS5tAK0gF0VAv_EaRSmU4XGqdwxy9&usqp=CAU",
+    //           services: [{
+    //             service_type: "Maintenance",
+    //             service_mileage: "93,000",
+    //             service_dt: "12/21/2017",
+    //             service_by: "Midas",
+    //             service_receipt: null
+    //             }]
+    //           }
+    // // }
+    }).then(newVehicle => {
+      this.props.history.push('/');
       this.setState(prevState => ({
-        events: [...prevState.events, newEvent.data]
+        events: [...prevState.vehicles, newVehicle.data]
       }));
+    }).then((response) => {
+      console.log("Car Maintain App","response get details:"+response.data);
     }).catch(err => console.log(err))
   }
+
+  deleteVehicleAxios = event => {
+    console.log('Deleting vehicle', `${backendUrl}${event.target.id}`)
+    event.preventDefault();
+    axios({
+      method: "DELETE",
+      url: `${backendUrl}${event.target.id}`
+    }).then(newVehicle => {
+      this.getVehiclesAxios();
+      this.setState(prevState => ({
+        vehicles: [...prevState.vehicles, newVehicle.data]
+      }))
+      this.props.history.push("/")
+    });
+  };
+
+  // createServiceAxios = event => {
+  //   console.log('create item axios')
+  //   axios({
+  //     method: "POST",
+  //     url: `${backendUrl}`,
+  //     data: {
+  //       vehicle: {
+  //         make: this.state.vehicleMake,
+  //         model: this.state.vehicleModel,
+  //         year: this.state.vehicleYear,
+  //         color: this.state.vehicleColor,
+  //         currentMileage: this.state.vehicleCurrentMileage,
+  //         vehicleImage: this.state.vehicleImage,
+  //       },
+  //       services: {
+  //         serviceType: this.state.serviceType,
+  //         serviceMileage: this.state.serviceMileage,
+  //         serviceDt: this.state.serviceDt,
+  //         serviceBy:  this.state.serviceBy,
+  //         serviceReceipt: this.state.serviceBy,
+  //       }
+  //     }
+  //   }).then(newEvent => {
+  //     this.props.history.push(`/event/${newEvent.data._id}`);
+  //     this.setState(prevState => ({
+  //       events: [...prevState.events, newEvent.data]
+  //     }));
+  //   }).catch(err => console.log(err))
+  // }
 
  handleChange = event => {
   this.setState({
@@ -62,7 +144,7 @@ class App extends Component {
 
 handNewVehicleSubmit = event => {
   event.preventDefault();
-  this.createItemAxios();
+  this.createVehicleAxios();
 }
 
   render() {
@@ -76,11 +158,11 @@ handNewVehicleSubmit = event => {
       <div className="App">
         <header className="App-header">
           <Link to="/">
-            <h1 className='App-logo'>AutoCare </h1>
+            <h1 className='logo'>AutoCare </h1>
           </Link>
           <Route exact path="/"  component={ Navigation }/>
-      </header>
-      <section className='Main-display'>
+        </header>
+      < section className='Main-display'>
           I am in the React app...
           <Switch>
             <Route
@@ -93,6 +175,7 @@ handNewVehicleSubmit = event => {
             <Route
               exact path='/vehicle/:id'
               render={routerProps => <ServiceLog {...routerProps} vehicles={this.state.vehicles} 
+              handleVDelete={this.deleteVehicleAxios}
               />
              }
             />
@@ -105,10 +188,20 @@ handNewVehicleSubmit = event => {
                 />
               )}
             />
+            {/* <Route
+              exact path='/update-vehicle/'
+              render={() => (              
+                <UpdateVehicleForm
+                  handleChange={this.handleChange}
+                  handleSubmit={this.handNewVehicleSubmit }
+                />
+              )}
+            /> */}
+    
             <Route path='/*' render={() => <Redirect to='/' />} />
           </Switch>
 
-      </section>
+        </section>
       </div>
     )
   }
