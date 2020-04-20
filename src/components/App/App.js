@@ -11,9 +11,11 @@ import UpdateVehicleForm from '../Vehicle/UpdateVehicleForm';
 import NewServiceForm from '../Servicelog/NewServiceForm';
 
 
-const backendUrl = "http://localhost:8000/api/vehicle/";
-const backendUrls = "http://localhost:8000/api/service/";
+// const backendUrl = "http://localhost:8000/api/vehicle/";
+// const backendUrls = "http://localhost:8000/api/service/";
 
+const backendUrl = process.env.REACT_APP_BACKEND_APP_URL || 'http://localhost:8000/api/vehicle/'
+const backendUrls = process.env.REACT_APP_BACKEND_APPS_URL || 'http://localhost:8000/api/service/'
 
 class App extends Component {
   constructor(props) {
