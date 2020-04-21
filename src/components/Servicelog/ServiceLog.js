@@ -27,7 +27,7 @@ const ServiceLog = props => {
         Delete Vehicle Entry
         </Link> */}
         <button
-        className='delete-v-button app-link'
+        className='delete-button app-link'
         id={ServiceEntries[0].id}
         onClick={props.handleVDelete}>
         Delete Vehicle Entry
@@ -49,14 +49,14 @@ const ServiceLog = props => {
               <div className='app-data-row'><p className='app-labels'>Service date: </p><p>  {service_rec.service_by}</p></div>
               <div className='app-data-row'><p className='app-labels'>Service date: </p><p>  {service_rec.service_dt}</p></div>
               <div className='app-data-row'><p className='app-labels'>Serviced mileage: </p><p>  {service_rec.service_mileage}</p></div>
-              <Link to={`/update-service/${service_rec.id}`} className='app-link'>
+              <Link to={`/vehicle/${service_rec.vehicle}/${service_rec.id}/update-service/`} className='app-link'>
                 Update Service Entry
               </Link>
               {/* <Link to={`delete-service/${service_rec.vehicle}/${service_rec.id}`} className='app-link'>
                 Delete Service Entry
               </Link> */}
               <button
-              className='delete-s-button app-link'
+              className='delete-button app-link'
               id={service_rec.id}
               link={`vehicle/${service_rec.vehicle}/`}
               onClick={props.handleSDelete}>

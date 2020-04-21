@@ -12,7 +12,10 @@ const Vehicles = props => {
     })
 
     return (
-        <div className='vehicles-fleet'>{allVehicles}</div>
+        <>
+          <p className='Vehicle-display main-vehicle-header'><h3>Vehicles Listing</h3></p>
+          <div className='vehicles-fleet'>{allVehicles}</div>
+        </>
     )
 }
 

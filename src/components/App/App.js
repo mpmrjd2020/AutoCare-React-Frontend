@@ -9,6 +9,7 @@ import ServiceLog from '../Servicelog/ServiceLog';
 import NewVehicleForm from '../Vehicle/NewVehicleForm';
 import UpdateVehicleForm from '../Vehicle/UpdateVehicleForm';
 import NewServiceForm from '../Servicelog/NewServiceForm';
+import UpdateServiceForm from '../Servicelog/UpdateServiceForm'
 
 
 // const backendUrl = "http://localhost:8000/api/vehicle/";
@@ -102,22 +103,6 @@ class App extends Component {
           // }
           // ]
       }
-      // data: {
-    //     data: {make: "Hyndaiz",
-    //           model: "Accent",
-    //           year: "2011",
-    //           color: "Metallic Brown",
-    //           current_mileage: "73,120",
-    //           vehicle_image: "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS0_b5f6nvSZ2MkxgAKgbKpS5tAK0gF0VAv_EaRSmU4XGqdwxy9&usqp=CAU",
-    //           services: [{
-    //             service_type: "Maintenance",
-    //             service_mileage: "93,000",
-    //             service_dt: "12/21/2017",
-    //             service_by: "Midas",
-    //             service_receipt: null
-    //             }]
-    //           }
-    // // }
     }).then(newVehicle => {
       this.props.history.push('/');
       this.setState(prevState => ({
@@ -186,36 +171,63 @@ class App extends Component {
 
   createServiceAxios = event => {
     console.log('create service axios', this.state)
- 
+    console.log('event.target.serviceVehicle.value', event.target.serviceVehicle.value)
+  
     axios({
       method: "POST",
       url: `${backendUrls}`,
     //   data:         {
-    //     "vehicle": 2,
+    //     "vehicle": 8,
     //     "service_type": "Lube Maintenance",
     //     "service_mileage": "5,000",
     //     "service_dt": "06/02/2017",
-    //     "service_by": "Midas",
+    //     "service_by": "Midas Inc",
     //     "service_receipt": null
     // }
       data: {
-            vehicle: this.state.serviceVehicle,
+            vehicle: event.target.serviceVehicle.value,
             service_type: this.state.serviceType,
             service_mileage: this.state.serviceMileage,
             service_dt: this.state.serviceDt,
             service_by: this.state.serviceBy,
-            service_receipt: this.state.serviceReceipt 
+            service_receipt: null
             }
     }).then(newService => {
-      this.props.history.push('/');
+      this.props.history.push(`/vehicle/${newService.data.vehicle}`);
       this.setState(prevState => ({
         events: [...prevState.services, newService.data]
       }));
-    }).then((response) => {
-      console.log("Car Maintain App response get service details:", response);
+      console.log("Car Maintain App response get service details:", newService);
     }).catch(err => {
       console.log(err);
     })
+  }
+
+  updateServiceAxios = event => {
+    let id = event.target.serviceId.value
+    let updatedService =  {
+      vehicle: event.target.serviceVehicle.value,
+      service_type: event.target.serviceType.value,
+      service_mileage: event.target.serviceMileage.value,
+      service_dt: event.target.serviceDt.value,
+      service_by: event.target.serviceBy.value,
+      service_receipt: null
+  }
+    console.log(updatedService)
+    axios({
+      method: "PUT",
+      url: `${backendUrls}${id}`,
+      data: updatedService
+    }).then(updateService => {
+      this.props.history.push(`/vehicle/${updateService.data.vehicle}/`);
+      this.setState(prevState => ({
+        events: [...prevState.vehicles, updateService.data]
+      }));
+      console.log('NEWV',updateService)
+      console.log("Car Maintain App response update vehicle:", updateService.data);
+    }).catch(err => 
+      console.log(err)
+    )
   }
 
   handleCreateService() {
@@ -251,7 +263,9 @@ class App extends Component {
       this.setState(prevState => ({
         vehicles: [...prevState.vehicles, newVehicle.data]
       }))
-      this.props.history.push(`/${event.target.link}`)
+      console.log('Delete Service newVehicle', newVehicle)
+      this.props.history.push(`/`)
+      // this.props.history.push(`/${event.target.link}`)
     });
   };
 
@@ -298,13 +312,21 @@ handNewVehicleSubmit = event => {
 
 handleNewServiceSubmit = event => {
   event.preventDefault();
-  this.createServiceAxios();
+  this.createServiceAxios(event);
+  this.getVehiclesAxios() 
 }
 
 handleUpdateVehicleSubmit = event => {
   event.preventDefault();
 
   this.updateVehicleAxios(event);
+  
+}
+
+handleUpdateServiceSubmit = event => {
+  event.preventDefault();
+
+  this.updateServiceAxios(event);
   
 }
 
@@ -324,7 +346,6 @@ handleUpdateVehicleSubmit = event => {
           <Route exact path="/"  component={ Navigation }/>
         </header>
       < section className='Main-display'>
-          I am in the React app...
           <Switch>
             <Route
               exact path='/' 
@@ -365,10 +386,12 @@ handleUpdateVehicleSubmit = event => {
               )}
             />
             <Route
-              exact path='/vehicle/:id/update-service/'
-              render={() => (<NewServiceForm
+              exact path='/vehicle/:vehicle/:id/update-service/'
+              render={(routerProps) => (<UpdateServiceForm
+                  {...routerProps} 
+                  vehicles={this.state.vehicles} 
                   handleChange={this.handleChange}
-                  handleUpdateSubmit={this.handUpdateServiceSubmit }
+                  handleUpdateSubmit={this.handleUpdateServiceSubmit }
                 />
               )}
             />
@@ -382,8 +405,7 @@ handleUpdateVehicleSubmit = event => {
                 />
               )}
             />
-            {/* <Route exact path='/vehicle/:id/add-service/}' component={NewServiceForm} /> */}
-    
+          
             {/* <Route path='/*' render={() => <Redirect to='/' />} /> */}
           </Switch>
 

@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
 import '../App/App.css';
 
-class CreateService extends Component {
+class UpdateService extends Component {
     constructor(props) {
         super(props)
     }
 
   submitService = e => {
       e.preventDefault()
-      this.props.handleCreateSubmit(e)
+      this.props.handleUpdateSubmit(e)
   }
 
   render() {
-    // console.log('new form props', this.props)
-    // console.log('this.props.match.params.vehicle', this.props.match.params.id)
+    console.log('new service form props', this.props)
+    console.log('this.props.match.params.service', this.props.match.params.id)
+    console.log('this.props.match.params.service', this.props.match.params.vehicle)
     let ServiceEntries = this.props.vehicles.filter(vehicle => {
-        return vehicle.id == this.props.match.params.id}
+        return vehicle.id == this.props.match.params.vehicle}
     )
 
+    let ServiceEntry = ServiceEntries[0].services.filter(service => {
+        return service.id = this.props.match.params.id
+    })
+
     // console.log('Update props', this.props)
-    // console.log('New form services entries', ServiceEntries)
+    console.log('Update form services entries', ServiceEntries)
+    console.log('Update form single service entries', ServiceEntry)
    
     
     return (
     <div className='new-s-form'>
-        <h2>Add Service Entry</h2>
+        <h2>Update Service Entry</h2>
         <form
         className='New-Service-Entry'
         onChange={this.props.handleChange}
@@ -34,37 +40,39 @@ class CreateService extends Component {
         <div >
 
             <label>
-                Service Record Addition To {ServiceEntries[0].make} {ServiceEntries[0].model}
+                Update Service Record {ServiceEntry[0].id}
             </label>
+
+            <input type='hidden' name='serviceId' defaultValue={ServiceEntry[0].id}/>
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Vehicle id</label>
-                <input type='text' name='serviceVehicle' placeholder='serviceVehicle' defaultValue={ServiceEntries[0].id} />
+                <input type='text' name='serviceVehicle' placeholder='serviceVehicle' defaultValue={ServiceEntry[0].vehicle} />
             </p>
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Service Type</label>
-                <input type='text' name='serviceType' placeholder='ServiceType'  />
+                <input type='text' name='serviceType' placeholder='serviceType' defaultValue={ServiceEntry[0].service_type} />
             </p>
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Service Mileage:</label>
-                <input type='text' name='serviceMileage' placeholder='ServiceMileage' />
+                <input type='text' name='serviceMileage' placeholder='serviceMileage' defaultValue={ServiceEntry[0].service_mileage} />
             </p>
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Service Date:</label>
-                <input type='text' name='serviceDt' placeholder='ServiceDate' />
+                <input type='text' name='serviceDt' placeholder='serviceDate' defaultValue={ServiceEntry[0].service_dt} />
             </p>
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Service By:</label>
-                <input type='text' name='serviceBy' placeholder='ServiceBy' />
+                <input type='text' name='serviceBy' placeholder='ServiceBy' defaultValue={ServiceEntry[0].service_by} />
             </p>       
 
             <p className='app-form'>
                 <label className='Add-Vehicle-Label'>Service Receipt</label>
-                <input type='text' name='serviceReceipt' placeholder={null} />
+                <input type='text' name='serviceReceipt' placeholder={null} defaultValue={ServiceEntry[0].service_receipt} />
             </p>
         </div>
 
@@ -81,4 +89,4 @@ class CreateService extends Component {
     }
 };
 
-export default CreateService;
+export default UpdateService;

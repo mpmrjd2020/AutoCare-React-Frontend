@@ -6,7 +6,7 @@ const Vehicle = props => {
     return (
         <div className='Vehicle-display'>
             <Link to={`/vehicle/${props.vehicle.id}`} className='vehicle-detail'>
-                  <h4>{props.vehicle.make} {props.vehicle.model}</h4>
+                  <h3>{props.vehicle.make} {props.vehicle.model}</h3>
             </Link>
             <div className='app-data-row'><p className='app-labels'>Model year: </p><p>{props.vehicle.year}</p></div>
             <div className='app-data-row'><p className='app-labels'>Vehicle color: </p><p>{props.vehicle.color}</p></div>
